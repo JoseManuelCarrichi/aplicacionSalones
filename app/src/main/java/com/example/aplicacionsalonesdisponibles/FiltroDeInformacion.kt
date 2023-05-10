@@ -104,6 +104,63 @@ class FiltroDeInformacion (private val context:Context) {
             }
         }
     }
+
+    // Función que ordena los salones de manera ascendente
+    private fun ordenarSalones(){
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                // Leer archivo
+                val inputStream = context.openFileInput("salonesOcupados.json")
+                val inputStreamReader = InputStreamReader(inputStream)
+                val datosJson = inputStreamReader.readText()
+                inputStreamReader.close()
+                inputStream.close()
+                val datosGson: List<salonOcupado> = Gson().fromJson(datosJson,Array<salonOcupado>::class.java).toList()
+                if(datosGson != null){
+                    val listaSalones = ArrayList<salonOrdenado>()
+                    for (elemento in datosGson){
+                        // Separar la cadena del horario
+                        val (horaInicio, horaFin) = elemento.horario.split(" a ")
+                        //Eliminar espacios
+                        horaInicio.trim()
+                        horaFin.trim()
+                        //Separar la hora en horas y minutos
+                        val (horaInicio_HH,horaInicio_MM) = horaInicio.split(":")
+                        val (horaFin_HH, horaFin_MM) = horaFin.split(":")
+                        val horaInicioDecimal= (horaInicio_HH.toInt() + (horaInicio_MM.toFloat()/60))
+                        val horaFinDecimal = (horaFin_HH.toInt() + (horaFin_MM.toFloat()/60))
+                        //Agregar el objeto a la lista
+                        listaSalones.add(salonOrdenado(
+                            elemento.dia,
+                            elemento.salon,
+                            horaInicioDecimal,
+                            horaFinDecimal))
+                    }
+                    // Ordena los elementos según el número de salón, el número de día y la hora de inicio de clase
+                    val listaSalonesOrdenados = listaSalones.sortedWith(compareBy(
+                        salonOrdenado::salon,
+                        salonOrdenado::dia,
+                        salonOrdenado::horaInicio))
+
+                    // Convertir la lista a JSON
+                    val datosJson = Gson().toJson(listaSalonesOrdenados)
+                    Log.d("JoseManuel", datosJson.toString())
+                    // Guardar datos en un archivo
+                    val outputStream = context.openFileOutput("archivo_ordenado.json", Context.MODE_PRIVATE)
+                    val outputStreamWriter = OutputStreamWriter(outputStream)
+                    outputStreamWriter.write(datosJson)
+                    outputStreamWriter.close()
+                    Log.i("JoseManuel", "Test 5 Saved Data Update: Pass")
+                }else{
+                    Log.e("JoseManuel", "Test 5 Read Data: Fail")
+                }
+            }catch (e:Exception){
+                Log.e("JoseManuel", "Error al ordenar los salones: ${e.message}",e)
+            }
+        }
+
+    }
+
     //Objeto Retrofit
     private fun getRetrofit():Retrofit{
         return Retrofit
