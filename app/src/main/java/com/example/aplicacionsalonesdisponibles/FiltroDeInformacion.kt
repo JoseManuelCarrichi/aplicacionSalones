@@ -18,7 +18,7 @@ class FiltroDeInformacion (private val context:Context) {
     private val retrofit = getRetrofit()
     // Función general para llamar a todas las funciones manteniendo la
     // Seguridad de las funciones
-    fun obtenerInformacion(){
+    fun iniciarFiltro(){
         consultaAPI()
     }
     // Función para realizar una consulta a la API
@@ -28,7 +28,7 @@ class FiltroDeInformacion (private val context:Context) {
             val myResponse: Response<listResponse> = retrofit.create(ApiService::class.java).getData()
             if (myResponse.isSuccessful){
                 try {
-                    Log.i("Aplicacion","Test 1 API R: Pass")
+                    Log.i("AppConfirm","Test 1 API R: Pass")
                     val response: listResponse? = myResponse.body()
 
                     if (response != null){
@@ -40,18 +40,18 @@ class FiltroDeInformacion (private val context:Context) {
                         val outputStreamWriter = OutputStreamWriter(outputStream)
                         outputStreamWriter.write(datosJson)
                         outputStreamWriter.close()
-                        Log.i("JoseManuel", "Test 2 Saved data: Pass")
+                        Log.i("AppConfirm", "Test 2 Saved data: Pass")
                     }else{
-                        Log.e("JoseManuel", "Test 1 API R: Fail")
+                        Log.e("Error", "Test 1 API R: Fail")
                     }
                     // Llamada al siguiente método
                     obtenerSalonesOcupados()
                 }catch (e:Exception){
-                    Log.e("JoseManuel", "Error al extraer datos de la API: ${e.message}", e)
+                    Log.e("Error", "Error al extraer datos de la API: ${e.message}", e)
                 }
             }
             else{
-                Log.i("JoseManuel", "No funciona :(")
+                Log.e("Error", "No funciona :(")
             }
         }
     }
@@ -66,7 +66,7 @@ class FiltroDeInformacion (private val context:Context) {
                 inputStream.close()
                 val datosGson: listResponse? = Gson().fromJson(datosJson,listResponse::class.java)
                 if(datosGson != null){
-                    Log.i("JoseManuel","Test 3 Read Data: pass")
+                    Log.i("AppConfirm","Test 3 Read Data: pass")
                     val listaSalonesOcupados = ArrayList<salonOcupado>()
                     for (elemento in datosGson.horarios){
                         // Buscar en los pares
@@ -91,18 +91,18 @@ class FiltroDeInformacion (private val context:Context) {
                     }
                     // Convertir la lista a JSON
                     val datosJson = Gson().toJson(listaSalonesOcupados)
-                    Log.d("JoseManuel", datosJson.toString())
+                    //Log.d("AppConfirm", datosJson.toString())
                     // Guardar datos en un archivo
                     val outputStream = context.openFileOutput("salonesOcupados.json", Context.MODE_PRIVATE)
                     val outputStreamWriter = OutputStreamWriter(outputStream)
                     outputStreamWriter.write(datosJson)
                     outputStreamWriter.close()
-                    Log.i("JoseManuel", "Test 4 Saved Data Update: Pass")
+                    Log.i("AppConfirm", "Test 4 Saved Data Update: Pass")
                 }
                 // Llamada al siguiente método
                 ordenarSalones()
             }catch (e:Exception){
-                Log.e("JoseManuel", "Error al manipular los datos del archivo: ${e.message}",e)
+                Log.e("Error", "Error al manipular los datos del archivo: ${e.message}",e)
             }
         }
     }
@@ -146,19 +146,19 @@ class FiltroDeInformacion (private val context:Context) {
 
                     // Convertir la lista a JSON
                     val datosJson = Gson().toJson(listaSalonesOrdenados)
-                    Log.d("JoseManuel", datosJson.toString())
+                    //Log.d("AppConfirm", datosJson.toString())
                     // Guardar datos en un archivo
                     val outputStream = context.openFileOutput("archivo_ordenado.json", Context.MODE_PRIVATE)
                     val outputStreamWriter = OutputStreamWriter(outputStream)
                     outputStreamWriter.write(datosJson)
                     outputStreamWriter.close()
-                    Log.i("JoseManuel", "Test 5 Saved Data Update: Pass")
+                    Log.i("AppConfirm", "Test 5 Saved Data Update: Pass")
                 }else{
-                    Log.e("JoseManuel", "Test 5 Read Data: Fail")
+                    Log.e("Error", "Test 5 Read Data: Fail")
                 }
                 obtenerSalonesDisponibles()
             }catch (e:Exception){
-                Log.e("JoseManuel", "Error al ordenar los salones: ${e.message}",e)
+                Log.e("Error", "Error al ordenar los salones: ${e.message}",e)
             }
         }
     }
@@ -222,14 +222,14 @@ class FiltroDeInformacion (private val context:Context) {
                     val outputStreamWriter = OutputStreamWriter(outputStream)
                     outputStreamWriter.write(datosJson)
                     outputStreamWriter.close()
-                    Log.i("JoseManuel", "Test 6 Saved Data Update: Pass")
-                    Log.i("JoseManuel", datosJson.toString())
+                    Log.i("AppConfirm", "Test 6 Saved Data Update: Pass")
+                    //Log.d("AppConfirm", datosJson.toString())
                 }else{
-                    Log.e("JoseManuel", "Test 6 Saved Data Update: Fail")
+                    Log.e("Error", "Test 6 Saved Data Update: Fail")
                 }
 
             }catch (e:Exception){
-                Log.e("JoseManuel", "Error al obtener los salones disponibles: ${e.message}", e)
+                Log.e("Error", "Error al obtener los salones disponibles: ${e.message}", e)
             }
         }
     }

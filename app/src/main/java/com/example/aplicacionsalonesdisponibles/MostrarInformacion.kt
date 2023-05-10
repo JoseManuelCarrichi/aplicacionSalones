@@ -32,12 +32,13 @@ class MostrarInformacion(private val context: Context) {
                 Calendar.SUNDAY -> 7
                 else -> throw IllegalArgumentException("Día de la semana inválido")
             }
-            Log.i("MostrarInformacion", dayNumber.toString())
-            Log.i("MostrarInformacion", horarioActual.toString())
+            Log.i("AppConfirm", "Test 7 Horario: Pass")
+            Log.d("AppConfirm", dayNumber.toString())
+            Log.d("AppConfirm", horarioActual.toString())
 
 
         }catch (e:Exception){
-            Log.e("Errores", "Se produjo un error al obtener el día y hora actuales")
+            Log.e("Error", "Se produjo un error al obtener el día y hora actuales")
         }
     }
 
@@ -62,9 +63,10 @@ class MostrarInformacion(private val context: Context) {
                 }
             }
             listaJson = Gson().toJson(listaSalones)
-            Log.i("MostrarInformacion", listaJson.toString())
+            Log.i("AppConfirm", "Test 8 Salones Disponibles: Pass")
+            Log.d("AppConfirm", listaJson.toString())
         }catch (e:Exception){
-            Log.e("Errores", "Se produjo un error al buscar los salones disponibles")
+            Log.e("Error", "Se produjo un error al buscar los salones disponibles")
         }
     }
 }
