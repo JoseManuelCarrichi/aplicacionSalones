@@ -20,8 +20,6 @@ class FiltroDeInformacion (private val context:Context) {
     // Seguridad de las funciones
     fun obtenerInformacion(){
         consultaAPI()
-        obtenerSalonesOcupados()
-
     }
     // Función para realizar una consulta a la API
     private fun consultaAPI(){
@@ -46,6 +44,8 @@ class FiltroDeInformacion (private val context:Context) {
                     }else{
                         Log.e("JoseManuel", "Test 1 API R: Fail")
                     }
+                    // Llamada al siguiente método
+                    obtenerSalonesOcupados()
                 }catch (e:Exception){
                     Log.e("JoseManuel", "Error al extraer datos de la API: ${e.message}", e)
                 }
@@ -99,6 +99,8 @@ class FiltroDeInformacion (private val context:Context) {
                     outputStreamWriter.close()
                     Log.i("JoseManuel", "Test 4 Saved Data Update: Pass")
                 }
+                // Llamada al siguiente método
+                ordenarSalones()
             }catch (e:Exception){
                 Log.e("JoseManuel", "Error al manipular los datos del archivo: ${e.message}",e)
             }
@@ -154,11 +156,82 @@ class FiltroDeInformacion (private val context:Context) {
                 }else{
                     Log.e("JoseManuel", "Test 5 Read Data: Fail")
                 }
+                obtenerSalonesDisponibles()
             }catch (e:Exception){
                 Log.e("JoseManuel", "Error al ordenar los salones: ${e.message}",e)
             }
         }
+    }
 
+    // Función que obtiene los salones disponibles
+    private fun obtenerSalonesDisponibles(){
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                // Leer archivo
+                val inputStream = context.openFileInput("archivo_ordenado.json")
+                val inputStreamReader = InputStreamReader(inputStream)
+                val datosJson = inputStreamReader.readText()
+                inputStreamReader.close()
+                inputStream.close()
+                val datosGson: List<salonOrdenado> = Gson().fromJson(datosJson, Array<salonOrdenado>::class.java).toList()
+                if(datosGson != null){
+                    // Horas de inicio y fin de cada clase
+                    val horasClase = arrayListOf<Float>(7.0f, 8.5f, 10.0f, 11.5f, 13.0f, 14.5f, 16.0f, 17.5f, 19.0f, 20.5f)
+                    // Lita de salones
+                    val salones = arrayListOf(
+                        1101, 1102, 1103, 1104, 1105, 1106, 1107, 1108, 1109, 1110,
+                        1111, 1112, 1113, 1114, 1115, 1119,
+                        1201, 1202, 1203, 1204, 1205, 1206,1207, 1208, 1209, 1210,
+                        1211, 1212, 1213, 1214, 1215,
+                        2101, 2102, 2103, 2104, 2105, 2106, 2107, 2108, 2109, 2110,
+                        2111, 2112,
+                        2201, 2202, 2203, 2204, 2205, 2206, 2207, 2208, 2209, 2210,
+                        2211, 2212, 2213, 2214, 2215,
+                        3101, 3102, 3103, 3104, 3105, 3106, 3107, 3108, 3109, 3110,
+                        3111, 3112, 3113, 3114, 3115,
+                        3201, 3202, 3203, 3204, 3205, 3206, 3207, 3208, 3209, 3210,
+                        3211, 3212, 3213, 3214, 3215)
+                    val salonesDisponibles = ArrayList<salonDisponible>()
+                    for(dia in 1..5){
+                        for (hora in horasClase){
+                            for(salon in salones){
+                                var disponible = false
+                                for(horario in datosGson){
+                                    if (horario.dia == dia && horario.salon == salon && horario.horaInicio <= hora && horario.horaFin >= hora+1.5){
+                                        disponible = true
+                                        break
+                                    }
+                                }
+                                if(!disponible){
+                                    //Si está disponible , se agrega a una lista de salones disponibles siempre que
+                                    //el salón no haya ido agregado anteriormente
+                                    salonesDisponibles.add(salonDisponible(dia, salon, hora))
+                                }
+                            }
+                        }
+                    }
+                    // Ordenar los salones disponibles
+                    val listaSalonesDisponibles: List<salonDisponible> = salonesDisponibles.sortedWith(compareBy(
+                        salonDisponible::salon,
+                        salonDisponible::dia,
+                        salonDisponible::horaInicio))
+                    // Convertir a JSON
+                    val datosJson = Gson().toJson(listaSalonesDisponibles)
+                    // Guardar datos en un archivo
+                    val outputStream = context.openFileOutput("salonesDisponibles.json", Context.MODE_PRIVATE)
+                    val outputStreamWriter = OutputStreamWriter(outputStream)
+                    outputStreamWriter.write(datosJson)
+                    outputStreamWriter.close()
+                    Log.i("JoseManuel", "Test 6 Saved Data Update: Pass")
+                    Log.i("JoseManuel", datosJson.toString())
+                }else{
+                    Log.e("JoseManuel", "Test 6 Saved Data Update: Fail")
+                }
+
+            }catch (e:Exception){
+                Log.e("JoseManuel", "Error al obtener los salones disponibles: ${e.message}", e)
+            }
+        }
     }
 
     //Objeto Retrofit
