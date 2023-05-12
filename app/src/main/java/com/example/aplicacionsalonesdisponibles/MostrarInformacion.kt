@@ -11,6 +11,8 @@ class MostrarInformacion(private val context: Context) {
     private var dayNumber = 0
     private var horarioActual = 0.0f
     private var listaJson = ""
+    //Lista de sslones disponibles
+    private val listaSalones = ArrayList<salon>()
     fun obtenerDiaHora(){
         try {
             val calendar = Calendar.getInstance()
@@ -53,9 +55,6 @@ class MostrarInformacion(private val context: Context) {
             inputStream.close()
             val datosGson: List<salonDisponible> = Gson().fromJson(datosJson, Array<salonDisponible>::class.java).toList()
 
-            //Lista de sslones disponibles
-            val listaSalones = ArrayList<salon>()
-
             // Verificar qué salones están dispoibles
             for (salon in datosGson){
                 if (salon.dia == dayNumber && salon.horaInicio <= horarioActual && horarioActual < salon.horaInicio + 1.5 ){
@@ -69,4 +68,7 @@ class MostrarInformacion(private val context: Context) {
             Log.e("Error", "Se produjo un error al buscar los salones disponibles")
         }
     }
+
+
+    fun mostrarSalones():List<salon> = listaSalones
 }
