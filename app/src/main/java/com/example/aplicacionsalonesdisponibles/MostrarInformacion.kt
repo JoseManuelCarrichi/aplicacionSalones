@@ -71,4 +71,5 @@ class MostrarInformacion(private val context: Context) {
 
 
     fun mostrarSalones():List<salon> = listaSalones
+
 }

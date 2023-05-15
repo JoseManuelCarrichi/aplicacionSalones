@@ -1,6 +1,7 @@
 package com.example.aplicacionsalonesdisponibles
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
@@ -12,12 +13,13 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.io.InputStreamReader
 import java.lang.Exception
 import java.io.OutputStreamWriter
+import java.time.Instant
+import java.time.LocalDateTime
+import java.util.Calendar
 
 class FiltroDeInformacion (private val context:Context) {
     // Instancia del objeto retrofit
     private val retrofit = getRetrofit()
-    // Función general para llamar a todas las funciones manteniendo la
-    // Seguridad de las funciones
     fun iniciarFiltro(){
         consultaAPI()
     }
@@ -46,6 +48,7 @@ class FiltroDeInformacion (private val context:Context) {
                     }
                     // Llamada al siguiente método
                     obtenerSalonesOcupados()
+
                 }catch (e:Exception){
                     Log.e("Error", "Error al extraer datos de la API: ${e.message}", e)
                 }
@@ -222,12 +225,20 @@ class FiltroDeInformacion (private val context:Context) {
                     val outputStreamWriter = OutputStreamWriter(outputStream)
                     outputStreamWriter.write(datosJson)
                     outputStreamWriter.close()
+
+                    //Obtener fecha actual
+                    val calendar = Calendar.getInstance()
+                    val currentDate = "${calendar.get(Calendar.YEAR)}-${calendar.get(Calendar.MONTH) + 1}-${calendar.get(Calendar.DAY_OF_MONTH)}"
+                    //Guardar la fecha en preferecias compartidas
+                    val sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+                    val editor = sharedPreferences.edit()
+                    editor.putString("lastDate",currentDate)
+                    editor.apply()
                     Log.i("AppConfirm", "Test 6 Saved Data Update: Pass")
-                    //Log.d("AppConfirm", datosJson.toString())
+
                 }else{
                     Log.e("Error", "Test 6 Saved Data Update: Fail")
                 }
-
             }catch (e:Exception){
                 Log.e("Error", "Error al obtener los salones disponibles: ${e.message}", e)
             }

@@ -2,5 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="vino">#802434</color>
+    <color name="burgundy">#802434</color>
+    <color name="darkGray">#808080</color>
+    <color name="lightGray">#D9D9D9</color>
 </resources>
