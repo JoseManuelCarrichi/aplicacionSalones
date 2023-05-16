@@ -5,6 +5,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.aplicacionsalonesdisponibles.databinding.ItemSalonesBinding
 
 
+
+
+
 class SalonesViewHolder(view:View) : RecyclerView.ViewHolder(view) {
 
     private val binding = ItemSalonesBinding.bind(view)
