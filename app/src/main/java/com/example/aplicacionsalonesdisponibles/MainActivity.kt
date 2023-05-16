@@ -63,11 +63,14 @@ class MainActivity : AppCompatActivity() {
             // Instancia de la clase
             val interfaz = MostrarInformacion(context)
             interfaz.obtenerDiaHora()
-            //binding.txtHorarioActual.text = "Horario actual: "
+
             interfaz.buscarSalonesDisponibles()
-            val listaSalones: List<salon> = interfaz.mostrarSalones()
+            val listaSalonesHorario: listaSalonesHorario = interfaz.mostrarSalones()
             //Ejecutar en el Hilo Principal
-            runOnUiThread { tablaUI(listaSalones) }
+            runOnUiThread {
+                tablaUI(listaSalonesHorario.listaSalones)
+                binding.txtHorarioActual.text = listaSalonesHorario.horario
+            }
         }
     }
 
@@ -77,8 +80,9 @@ class MainActivity : AppCompatActivity() {
         interfaz.obtenerDiaHora()
         //binding.txtHorarioActual.text = "Horario actual: "
         interfaz.buscarSalonesDisponibles()
-        val listaSalones: List<salon> = interfaz.mostrarSalones()
-        tablaUI(listaSalones)
+        val listaSalonesHorario:listaSalonesHorario = interfaz.mostrarSalones()
+        tablaUI(listaSalonesHorario.listaSalones)
+        binding.txtHorarioActual.text = listaSalonesHorario.horario
     }
 
 

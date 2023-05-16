@@ -70,6 +70,25 @@ class MostrarInformacion(private val context: Context) {
     }
 
 
-    fun mostrarSalones():List<salon> = listaSalones
+    fun mostrarSalones():listaSalonesHorario{
+        val horasClase = arrayListOf<Float>(7.0f, 8.5f, 10.0f, 11.5f, 13.0f, 14.5f, 16.0f, 17.5f, 19.0f, 20.5f)
+        var horario = ""
+        for(hora in horasClase){
+            if (hora <= horarioActual && horarioActual < hora+1){
+                val inicio = hora.toInt()
+                val inicioFloat = (hora - inicio)
+                val fin = (hora + 1).toInt()
+                val finFloat = ((hora + 1) - fin)
+
+                if (inicioFloat == 0.0f){
+                    horario = "Horario actual: $inicio" + ":00 a $fin" + ":30"
+                }else{
+                    horario= "Horario actual: $inicio" + ":30 a $fin" + ":00"
+                }
+            }
+
+        }
+        return listaSalonesHorario(horario,listaSalones)
+    }
 
 }

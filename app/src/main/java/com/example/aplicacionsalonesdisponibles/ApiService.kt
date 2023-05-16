@@ -40,6 +40,11 @@ data class salonDisponible(
     val salon: Int,
     val horaInicio: Float
 )
+
+data class listaSalonesHorario(
+    val horario: String,
+    val listaSalones: List<salon>
+)
 data class salon(
     val numeroSalon: Int
 )
