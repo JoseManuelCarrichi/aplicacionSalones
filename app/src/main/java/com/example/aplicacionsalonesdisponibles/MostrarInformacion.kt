@@ -71,22 +71,27 @@ class MostrarInformacion(private val context: Context) {
 
 
     fun mostrarSalones():listaSalonesHorario{
-        val horasClase = arrayListOf<Float>(7.0f, 8.5f, 10.0f, 11.5f, 13.0f, 14.5f, 16.0f, 17.5f, 19.0f, 20.5f)
+        //Si la hora se encuentra entre las 7 y las 10 pm, se buscan salones
         var horario = ""
-        for(hora in horasClase){
-            if (hora <= horarioActual && horarioActual < hora+1){
-                val inicio = hora.toInt()
-                val inicioFloat = (hora - inicio)
-                val fin = (hora + 1).toInt()
-                val finFloat = ((hora + 1) - fin)
+        if(horarioActual >= 7.0f && horarioActual <22.0){
+            val horasInicio = arrayListOf<Float>(7.0f, 8.5f, 10.0f, 11.5f, 13.0f, 14.5f, 16.0f, 17.5f, 19.0f, 20.5f)
+            val horasFin = arrayListOf<Float>(8.5f, 10.0f, 11.5f,13.0f, 14.5f, 16.0f, 17.5f, 19.0f, 20.5f, 22.0f)
 
-                if (inicioFloat == 0.0f){
-                    horario = "Horario actual: $inicio" + ":00 a $fin" + ":30"
-                }else{
-                    horario= "Horario actual: $inicio" + ":30 a $fin" + ":00"
+            for(hora in 0..9){
+                if (horasInicio[hora] <= horarioActual && horarioActual < horasFin[hora]){
+                    val inicio = horasInicio[hora].toInt()
+                    val inicioFloat = (horasInicio[hora] - inicio)
+                    val fin = horasFin[hora].toInt()
+                    //val finFloat = ((hora + 1) - fin)
+
+                    if (inicioFloat == 0.0f){
+                        horario = "Horario actual: $inicio" + ":00 a $fin" + ":30"
+                    }else if(inicioFloat == 0.5f){
+                        horario= "Horario actual: $inicio" + ":30 a $fin" + ":00"
+                    }
                 }
-            }
 
+            }
         }
         return listaSalonesHorario(horario,listaSalones)
     }
