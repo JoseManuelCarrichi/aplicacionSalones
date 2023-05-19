@@ -137,9 +137,9 @@ class MainActivity : AppCompatActivity() {
         //alarmManager.setExact(AlarmManager.RTC_WAKEUP)
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = System.currentTimeMillis()
-        // Establece la primera alarma a las 7:00
-        calendar.set(Calendar.HOUR_OF_DAY, 7)
-        calendar.set(Calendar.MINUTE, 0)
+        // Establece la primera alarma a las 6:50
+        calendar.set(Calendar.HOUR_OF_DAY, 6)
+        calendar.set(Calendar.MINUTE, 50)
         alarmManager.setRepeating(
             AlarmManager.RTC_WAKEUP,
             calendar.timeInMillis,
