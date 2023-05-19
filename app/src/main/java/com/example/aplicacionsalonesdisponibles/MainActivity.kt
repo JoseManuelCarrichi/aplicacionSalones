@@ -31,8 +31,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
         // Verificar si el archivo de los salones disponibles está disponible
         comprobarEjecucionPrevia(this)
+
     }
 
     fun comprobarEjecucionPrevia(context: Context) {
@@ -41,19 +43,21 @@ class MainActivity : AppCompatActivity() {
         val ahora = System.currentTimeMillis()
         val seisMesesEnMilis = 15778800000 // Número de milisegundos en 6 meses (considerando años no bisiestos)
         val unMesEnMilis = 2629800000 // Número de milisegundos en 1 mes
-
+        Log.i("AppConfirm", "Validado ejecuciones previas")
         if (ultimaEjecucion == 0L || ahora - ultimaEjecucion >= seisMesesEnMilis) {
             searchData(context)
             val editor = prefs.edit()
             editor.putLong("ultimaEjecucion", ahora)
             editor.apply()
         }else{
+            Log.i("AppConfirm", "Actualizando salones")
             actualizarSalones(context)
         }
     }
 
     private fun searchData(context: Context){
         CoroutineScope(Dispatchers.IO).launch {
+            Log.i("AppConfirm", "Consultando Salones en el Generador de Horarios")
             //Instancia de la clase
             val filtro = FiltroDeInformacion(context)
             filtro.iniciarFiltro()
@@ -94,6 +98,34 @@ class MainActivity : AppCompatActivity() {
 
         //Actualizar lista del adapter
         adapter.updateList(listaSalones)
+
+        // Preferencias del botón de notificaciones
+        val sharedPreferences = getSharedPreferences(PREF_KEY, MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        updateButton(sharedPreferences)
+        binding.switchButton.setOnCheckedChangeListener{_, isChecked ->
+            if (isChecked){
+                editor.putBoolean(SWITCH_BUTTON_KEY, true).apply()
+                Log.i("AppConfirm", "Notificaciones activadas")
+                updateButton(sharedPreferences)
+            }else{
+                editor.putBoolean(SWITCH_BUTTON_KEY, false).apply()
+                Log.i("AppConfirm", "Notificaciones desactivadas")
+                updateButton(sharedPreferences)
+            }
+        }
+    }
+
+    // Notificaciones
+    companion object{
+        const val SWITCH_BUTTON_KEY = "switch"
+        const val PREF_KEY = "pref"
+    }
+
+    private fun updateButton(sharedPreferences: SharedPreferences ){
+        binding.switchButton.apply {
+            isChecked = sharedPreferences.getBoolean(SWITCH_BUTTON_KEY, false)
+        }
     }
 
 }

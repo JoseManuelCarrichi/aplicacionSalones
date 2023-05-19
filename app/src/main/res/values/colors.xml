@@ -5,4 +5,8 @@
     <color name="burgundy">#802434</color>
     <color name="darkGray">#808080</color>
     <color name="lightGray">#D9D9D9</color>
+
+
+    <color name="buttonOff">#4C4646</color>
+    <color name="buttonOn">#802425</color>
 </resources>
