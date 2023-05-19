@@ -16,6 +16,6 @@
             android:layout_margin="@dimen/cardview_default_radius"
             android:textAlignment="center"
             android:textStyle="bold"
-            android:textColor="@color/black"/>
+            android:textColor="@color/white"/>
     </FrameLayout>
 </androidx.cardview.widget.CardView>
