@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application
         android:allowBackup="true"
@@ -14,6 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AplicacionSalonesDisponibles"
         tools:targetApi="31">
+        <receiver
+            android:name=".AlarmReceiver"
+            android:enabled="true"
+            android:exported="false" >
+        </receiver>
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

@@ -1,7 +1,13 @@
 package com.example.aplicacionsalonesdisponibles
 
+import android.app.AlarmManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -30,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         // Iniciar binding
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        createNotificationChannel()
 
 
         // Verificar si el archivo de los salones disponibles está disponible
@@ -107,6 +114,7 @@ class MainActivity : AppCompatActivity() {
             if (isChecked){
                 editor.putBoolean(SWITCH_BUTTON_KEY, true).apply()
                 Log.i("AppConfirm", "Notificaciones activadas")
+                programarNotificacion()
                 updateButton(sharedPreferences)
             }else{
                 editor.putBoolean(SWITCH_BUTTON_KEY, false).apply()
@@ -116,15 +124,55 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun programarNotificacion() {
+        val intent = Intent(applicationContext, AlarmReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            applicationContext,
+            NOTIFICATION_ID,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        //alarmManager.setExact(AlarmManager.RTC_WAKEUP)
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = System.currentTimeMillis()
+        // Establece la primera alarma a las 7:00
+        calendar.set(Calendar.HOUR_OF_DAY, 7)
+        calendar.set(Calendar.MINUTE, 0)
+        alarmManager.setRepeating(
+            AlarmManager.RTC_WAKEUP,
+            calendar.timeInMillis,
+            AlarmManager.INTERVAL_HOUR + AlarmManager.INTERVAL_HALF_HOUR,
+            pendingIntent
+        )
+    }
+
     // Notificaciones
     companion object{
         const val SWITCH_BUTTON_KEY = "switch"
         const val PREF_KEY = "pref"
+        const val NOTIFICATION_ID = 1
+        const val CHANNEL_ID = "NotificationChannel"
     }
 
     private fun updateButton(sharedPreferences: SharedPreferences ){
         binding.switchButton.apply {
             isChecked = sharedPreferences.getBoolean(SWITCH_BUTTON_KEY, false)
+        }
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                CHANNEL_ID,
+                "Notificaciones",
+                NotificationManager.IMPORTANCE_DEFAULT
+            ).apply {
+                description = "Descripción del canal"
+            }
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
         }
     }
 
