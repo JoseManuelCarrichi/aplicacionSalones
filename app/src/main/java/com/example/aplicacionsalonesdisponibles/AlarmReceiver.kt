@@ -20,7 +20,7 @@ class AlarmReceiver: BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-        if (currentHour >= 6 && currentHour <= 21) {
+        if (currentHour >= 6 && currentHour <= 20) {
             showNotification(context)
         }
     }

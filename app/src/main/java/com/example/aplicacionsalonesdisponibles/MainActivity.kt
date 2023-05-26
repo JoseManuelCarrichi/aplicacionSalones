@@ -11,6 +11,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.aplicacionsalonesdisponibles.databinding.ActivityMainBinding
 import kotlinx.coroutines.CoroutineScope
@@ -81,6 +82,7 @@ class MainActivity : AppCompatActivity() {
             runOnUiThread {
                 tablaUI(listaSalonesHorario.listaSalones)
                 binding.txtHorarioActual.text = listaSalonesHorario.horario
+                binding.txtHorarioActual.isVisible = true
             }
         }
     }
@@ -94,6 +96,7 @@ class MainActivity : AppCompatActivity() {
         val listaSalonesHorario:listaSalonesHorario = interfaz.mostrarSalones()
         tablaUI(listaSalonesHorario.listaSalones)
         binding.txtHorarioActual.text = listaSalonesHorario.horario
+        binding.txtHorarioActual.isVisible = true
     }
 
 
