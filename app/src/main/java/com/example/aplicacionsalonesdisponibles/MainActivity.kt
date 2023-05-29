@@ -96,6 +96,7 @@ class MainActivity : AppCompatActivity() {
         val listaSalonesHorario:listaSalonesHorario = interfaz.mostrarSalones()
         tablaUI(listaSalonesHorario.listaSalones)
         binding.txtHorarioActual.text = listaSalonesHorario.horario
+        Log.i("Lista", "Lista: ${listaSalonesHorario.horario.length}")
         binding.txtHorarioActual.isVisible = true
     }
 
