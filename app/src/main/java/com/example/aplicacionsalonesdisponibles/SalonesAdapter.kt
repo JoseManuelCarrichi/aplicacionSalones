@@ -14,6 +14,7 @@ class SalonesAdapter(var salonesDisponiblesList:List<salon> = emptyList()) : Rec
     // Variables para detectar el tipo de Item
     private val HEADER = 0
     private val ITEM = 1
+    private val EMPTY = 2
 
     fun updateList(salonesDisponiblesList: List<salon>){
         this.salonesDisponiblesList = salonesDisponiblesList

@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import java.util.Calendar
@@ -20,7 +21,9 @@ class AlarmReceiver: BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-        if (currentHour >= 6 && currentHour <= 20) {
+        val dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+        // Las notificaciones se hablitan únicamente para horarios laborales de la escuela y solo de L a V
+        if (currentHour >= 6 && currentHour <= 20 && dayOfWeek != Calendar.SATURDAY || dayOfWeek != Calendar.SUNDAY) {
             showNotification(context)
         }
     }
