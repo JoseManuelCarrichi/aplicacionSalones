@@ -217,7 +217,7 @@ class FiltroDeInformacion (private val context:Context) {
                     val listaSalonesDisponibles: List<salonDisponible> = salonesDisponibles.sortedWith(compareBy(
                         salonDisponible::salon,
                         salonDisponible::dia,
-                        salonDisponible::horaInicio))
+                        salonDisponible::horaInicio)).reversed()
                     // Convertir a JSON
                     val datosJson = Gson().toJson(listaSalonesDisponibles)
                     // Guardar datos en un archivo
